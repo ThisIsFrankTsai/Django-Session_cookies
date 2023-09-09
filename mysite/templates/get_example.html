@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}search{% endblock %}
+{% block content %}
+
+
+
+
+<div class='container'>
+
+
+    <form action='https://www.google.com.tw/search' method='GET'>
+        <input id='user_pass' type='text' name='q'>
+        <input type='submit' value='搜尋'>
+    </form>
+    </br>
+    <form name='my form' action='/' method='GET'>
+        <label for='byear'>出生年:</label>
+            <select name='byear'>
+                {% for year in years %}
+                    <option value='{{ year }}'>{{ year }} </option>
+                {% endfor %}
+            </select><br>
+        喜歡的顏色（可複選）：
+        <input type='checkbox' name='fcolor' value='Green'>Green
+        <input type='checkbox' name='fcolor' value='Red'>Red
+        <input type='checkbox' name='fcolor' value='Blue'>Blue
+        <input type='checkbox' name='fcolor' value='Yellow'>Yellow
+        <input type='checkbox' name='fcolor' value='Orange'>Orange
+        <br/>
+
+        喜歡的電影（單選）：
+        <input type='radio' name='fmovie' value='不可能的任務'>不可能的任務
+        <input type='radio' name='fmovie' value='柯南'>柯南
+        <input type='radio' name='fmovie' value='粽邪3'>粽邪3
+        <input type='radio' name='fmovie' value='奧本海默'>奧本海默
+        <input type='radio' name='fmovie' value='芭比'>芭比
+        <br/>
+      
+
+        <label for='user_id'>Your ID:</label>
+        <input id='user_id' type='text' name='user_id'>
+        <label for_'user_pass'>Your Password:</label>
+        <input id='user_pass' type='password' name='user_pass'>
+        <input type='submit' value='登入'>
+        <input type='reset' value='清除重填'>
+    </form>
+
+    Your ID:{{ urid | default:"未輸入ID"}}<br/>
+
+    {% if verified %}
+        <em>你通過了驗證</em>
+    {% else %}
+        <em>密碼或帳號打錯了喔</em>
+    {% endif %}
+    <br>
+
+    出生年： {{se_byear}} <br>
+
+    顏色喜好:
+    {% for c in urfcolor %}
+        {{ c }}
+    {% empty %}
+        沒有選擇任何顏色
+    {% endfor%}
+    <br/>
+
+    喜歡的電影： {{se_fmovie}} <br>
+
+
+
+</div>
+{% endblock %}
