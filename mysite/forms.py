@@ -54,4 +54,7 @@ class PostForm(forms.ModelForm):
         self.fields['message'].label = '心情留言'
         self.fields['del_pass'].label = '設定密碼'
         #self.fields['captcha'].label = '驗證碼'
-131
+
+class LoginForm(forms.Form):
+    username = forms.CharField(label='姓名', max_length=10)
+    password = forms.CharField(label='密碼',widget=forms.PasswordInput())

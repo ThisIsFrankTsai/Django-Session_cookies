@@ -28,4 +28,5 @@ urlpatterns = [
     path('contact/', views.contact),
     path('post2db/', views.post2db),
     path('captcha/', include('captcha.urls')),
+    path('login/', views.login),
 ]
