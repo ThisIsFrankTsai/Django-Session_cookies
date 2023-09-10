@@ -29,4 +29,6 @@ urlpatterns = [
     path('post2db/', views.post2db),
     path('captcha/', include('captcha.urls')),
     path('login/', views.login),
+    path('userinfo/', views.userinfo),
+    path('logout/', views.logout),
 ]
