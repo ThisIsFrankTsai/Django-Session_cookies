@@ -41,6 +41,11 @@ def get_example(request):
 def index(request, pid=None, del_pass=None):
     if request.user.is_authenticated:
         username = request.user.username
+        try:
+            user = models.User.objects.get(username=username)
+            diaries = models.Diary.objects.filter(user=user).order_by('-ddate')
+        except:
+            pass
     messages.get_messages(request)
     return render(request, 'index.html', locals())
 
@@ -51,12 +56,31 @@ def listing(request):
 
     return render(request, 'listing.html', locals())
 
-def posting(request):
+# def posting(request):
+#     if request.method == 'POST':
+#         diary_form = forms.DiaryForm(request.POST)
+#         if diary_form.is_valid():
+#             recaptcha_response = request.POST.get('g-recaptcha-response')
+#             url = 'https://www.google.com/recaptcha/api/siteverify'
+#             values = {
+#                     'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+#                     'response': recaptcha_response
+#                     }
+#             data = urllib.parse.urlencode(values).encode()
+#             req = urllib.request.Request(url, data=data)
+#             response = urllib.request.urlopen(req)
+#             result = json.loads(response.read().decode())
+#         if result['success']:
+#             message = "您的訊息已儲存，要等管理者啟用後才看得到喔。"
+#             diary_form.save()
+#             return HttpResponseRedirect('/list/')
+#         else:
+#                 message = "reCAPTCHA驗證失敗，請在確認."
+#     else:
+#         diary_form = forms.DiaryForm()
+#         message = '如要張貼訊息，則每一個欄位都要填... '
 
-    moods = models.Mood.objects.all()
-    message = '如要張貼訊息，則每一個欄位都要填...'
-
-    return render(request, 'posting.html', locals())
+#     return render(request, 'posting.html', locals())
 
 def contact(request):
     
@@ -177,3 +201,24 @@ def userinfo(request):
             pass
 
     return render(request, 'userinfo.html', locals())
+
+@login_required(login_url='/login/')
+def posting (request):
+    if request.user.is_authenticated:
+        username = request.user.username
+        useremail = request.user.email
+        messages.get_messages(request)
+    if request.method == 'POST':
+        user = User.objects.get(username=username)
+        diary = models.Diary(user=user)
+        diary_form = forms.DiaryForm(request.POST, instance=diary)
+        if diary_form.is_valid():
+            messages.add_message(request, messages.INFO, "日記已儲存")
+            diary_form.save()
+            return HttpResponseRedirect('/')
+        else:
+            messages.add_message(request, messages.INFO, '要張貼日記，每一個欄位都要填...')
+    else:
+        diary_form = forms.DiaryForm()
+        messages.add_message(request, messages.INFO, '要張貼日記，每一個欄位都要填...')
+    return render(request, 'posting.html', locals())
